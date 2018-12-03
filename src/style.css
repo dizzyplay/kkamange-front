@@ -1,0 +1,31 @@
+body {
+     background: #f2f4f7;
+ }
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.divOutside {
+    padding-bottom: 20px;
+    margin-top: 10px;
+}
+
+.divTop {
+    margin-top: 20px;
+}
+
+.divBottom {
+    border-bottom: 1px solid darkgrey;
+    width: 340px;
+    padding: 15px;
+    margin-bottom: 30px;
+}
+
+span {
+    font-size: 0.4em
+}
+
