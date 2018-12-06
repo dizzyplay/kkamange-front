@@ -7,3 +7,5 @@ import './style.css'
 window.$ = window.jQuery = $;
 
 AOS.init();
+
+

@@ -6,7 +6,15 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 50px;
+    margin-top: 30px;
+}
+
+.menuContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 0px;
 }
 
 .divOutside {
@@ -29,3 +37,72 @@ span {
     font-size: 0.4em
 }
 
+/* toggle this class */
+
+.color-bg-start {
+    background-color: salmon;
+}
+
+
+/* toggle class bg-animate-color */
+
+.bg-animate-color {
+    animation: random-bg .5s linear infinite;
+}
+
+
+/* add animation to bg color  */
+
+@keyframes random-bg {
+    from {
+        filter: hue-rotate(0);
+    }
+    to {
+        filter: hue-rotate(360deg);
+    }
+}
+
+.fun-btn {
+    /* change bg color to get different hues    */
+    background-color: salmon;
+    color: white;
+    padding: 1em 2em;
+    border: none;
+    transition: all .1s ease;
+    border-radius: 5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    outline: none;
+    align-self: center;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.fun-btn:hover {
+    animation: random-bg .5s linear infinite, grow 1300ms ease infinite;
+}
+
+.start-fun {
+    background-color: #fff !important;
+    /* change color of button text when fun is started   */
+    color: salmon !important;
+}
+
+/* pulsating effect on button */
+@keyframes grow {
+    0% {
+        transform: scale(1);
+    }
+    14% {
+        transform: scale(1.2);
+    }
+    28% {
+        transform: scale(1);
+    }
+    42% {
+        transform: scale(1.2);
+    }
+    70% {
+        transform: scale(1);
+    }
+}
