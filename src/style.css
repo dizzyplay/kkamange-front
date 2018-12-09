@@ -9,6 +9,17 @@ body {
     margin-top: 30px;
 }
 
+.comment-box{
+  border-bottom: 1px solid;
+  width: 370px;
+  padding: 20px;
+  margin-top: 0;
+}
+
+.comment-text{
+  font-size: 12px;
+}
+
 .menuContainer {
     display: flex;
     flex-direction: row;
@@ -30,7 +41,7 @@ body {
     border-bottom: 1px solid darkgrey;
     width: 340px;
     padding: 15px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 
 span {
