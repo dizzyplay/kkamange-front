@@ -9,14 +9,17 @@ const axios = require('axios')
 window.$ = window.jQuery = $;
 
 AOS.init();
-axios.defaults.withCredentials = true;
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-axios.defaults.xsrfCookieName = "62ZrhZvwwJncOp6eqJmUgmAEUfFEqj6o4jh5nfPOBfvGWP2VKtDXIdKvtdzflETa";
 
-axios.get('http://localhost:8000/comment/1')
+let post_id = 2
+
+axios.get(`http://localhost:8000/comment/${post_id}`)
     .then(function(res){
-      console.log(res)
+      console.log(res.data[0].content)
+      let data = res.data[0]
+      console.log(data)
+      $("div li:last-child").append(`<li>[ ${data.nickname} ] ${data.content} - ${data.short_date} </li>`)
     })
+
 
 
 
