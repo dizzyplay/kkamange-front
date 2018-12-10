@@ -23,7 +23,8 @@ window.onload = function () {
           img_content.classList.add("divOutside");
           img_content.innerHTML = `<img src=${host}${data.photo} width="400"></div>`;
           content.classList.add("divBottom");
-          content.innerHTML = `<b>집사 : ${data.nickname}</b> <br> ${data.content} `;
+          content.innerHTML = `<b>집사 : ${data.nickname}</b> <br> ${data.content} <br> 
+            <span class="right"> - ${data.short_date}</span>`;
           main.classList.add("container");
           main.id = data.id;
           main.classList.add("container");

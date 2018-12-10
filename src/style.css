@@ -62,6 +62,11 @@ span .small {
     font-size: 0.4em
 }
 
+.divBottom .right {
+  float: right;
+  font-size: 12px;
+}
+
 /* toggle this class */
 
 .color-bg-start {
