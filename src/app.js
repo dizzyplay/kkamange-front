@@ -1,15 +1,41 @@
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import './style.css'
+import axios from 'axios';
+import view from './view/view.js';
+import Server from './view/server.js'
 
-const axios = require('axios');
+let ihost = 'http://10.0.1.13:8000';
+let server = new Server(ihost);
+let token = null;
+token = window.sessionStorage.getItem('jwt-token');
+let config = {
+  headers: {'Authorization': "JWT " + token}
+};
 
 
 AOS.init();
-const host = "http://localhost:8000";
+const host = "http://10.0.1.13:8000";
 
-window.onload = function () {
-  axios.get(`${host}/blog/api/`)
+
+document.addEventListener('readystatechange', function(){
+  if(token){
+    view.hideLoginForm();
+  }
+});
+
+window.addEventListener('load',function(){
+  if (token){
+    server.verifyToken(token);
+    mainContentView();
+  }
+
+  server.makeLogin();
+})
+
+
+let mainContentView = function () {
+  axios.get(`${host}/blog/api/`, config)
       .then(function (res) {
         let data = res.data
         let container = document.querySelector('.container')
@@ -33,22 +59,28 @@ window.onload = function () {
           main.appendChild(content);
           container.appendChild(main);
           main.dataset.aos = 'fade-up';
-          if(data.comment_count) commentView(data.id);
+          if (data.comment_count) commentView(data.id);
         })
+      })
+      .catch(err=>{
+        console.log("토큰만료")
+        window.sessionStorage.removeItem('jwt-token')
+        let loginForm = document.getElementById('login-form');
+        loginForm.classList.remove('hidden');
       })
 };
 
 let commentView = function (post_id) {
-  axios.get(`${host}/comment/${post_id}`)
+  axios.get(`${host}/comment/${post_id}`, config)
       .then(function (res) {
-        let data= res.data;
+        let data = res.data;
         let container = document.getElementById(`${post_id}`);
         let commentBox = document.createElement('div');
         commentBox.classList.add("comment-box")
         let ul = document.createElement('ul');
         container.appendChild(commentBox);
         commentBox.appendChild(ul);
-        Array.from(data).forEach(data =>{
+        Array.from(data).forEach(data => {
           let li = document.createElement('li');
           li.classList.add("comment-text");
           li.innerHTML = `<b>${data.nickname}</b><br>${data.content}   - ${data.short_date}`;
@@ -56,4 +88,7 @@ let commentView = function (post_id) {
         })
       })
 }
+
+
+
 
