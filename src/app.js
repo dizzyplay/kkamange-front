@@ -22,31 +22,45 @@ window.addEventListener('load', function () {
     server.verifyToken(token).then(data => {
       //token 인증 성공
       let valid_token = data.token;
-      let userinfo = data.profile;
+      let login_user = data.profile;
       //유저 정보 표시
-      view.userInfo(userinfo);
+      view.userInfo(login_user);
       //서버에 token 정보와 함께 get 요청
       server.getContent(valid_token)
-          .then(contentData => {
-            //게시글 뷰
-            view.content(contentData);
-
-            // 코멘트 뷰
-            contentData.forEach(contentData =>{
-              if(contentData.comment_count > 0){
-                server.getComment(valid_token, contentData.id)
-                    .then(commentData=>view.comment(commentData, contentData.id))
-              }
+          .then(res => {
+            view.content(res)
+            console.log(res)
+            Array.from(res).forEach(data=>{
+              server.getComment(valid_token, data.id)
+                  .then(res=>{
+                    view.comment(res, data.id)
+                  })
             })
           })
+
     })
         .catch(err => {
           //token 인증 에러
           console.log(err.message)
         })
-    // server.getContent(token).then(res=>view.content(res.data)).catch(err=>console.log(err));
+
+    let page = 2;
+    window.onscroll = function(e){
+      let clientRectBottom = document.documentElement.getBoundingClientRect().bottom
+      let clientHeight = document.documentElement.clientHeight
+      if(clientHeight+100 > clientRectBottom){
+        server.getContent(token,page).then(res=>view.content(res))
+        console.log('bottom')
+        page +=1;
+        console.log(page)
+      }
+      // if((window.scrollY + window.innerHeight)>document.body.offsetHeight){
+      //   setTimeout(()=>console.log('showbottom'),1000)
+      // }
+    }
+
   }
-  server.makeLogin();
+  server.submitLogin();
 })
 
 
