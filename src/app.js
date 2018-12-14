@@ -48,6 +48,15 @@ window.addEventListener('load', function () {
         console.log(err.message)
       });
 
+    // 글쓰기 버튼
+    let postBtn = document.querySelector('.postBtn');
+    let postFormVisible = false;
+    postBtn.addEventListener('click',function(){
+      if(!postFormVisible){
+        postFormVisible = !postFormVisible;
+        view.postForm()
+      }
+    })
 
     let page = 2;
     let preventGetContent = false;
@@ -75,12 +84,11 @@ window.addEventListener('load', function () {
                 page += 1;
               }
             });
-          // console.log('bottom');
-          // console.log(page)
         }
       }
     }, 500, {leading: true}))
   }
+  //토큰 인증 실패시
   server.submitLogin();
 })
 

@@ -48,6 +48,25 @@ const view = {
       ul.appendChild(li);
     })
   },
+  postForm: function(){
+    let menuDiv = document.querySelector('.menuContainer');
+
+    let postDiv = document.createElement('div');
+    postDiv.innerHTML = `
+      <form class="postForm" id="postformid">
+        <input type="text">
+        <textarea></textarea>
+        <input type="file">
+        <input type="submit">
+  </form>
+    `;
+    menuDiv.appendChild(postDiv)
+    let postform = document.getElementById('postformid')
+    postform.addEventListener('submit',function(e){
+      e.preventDefault();
+      console.log('submit event')
+    })
+  }
 };
 
 
