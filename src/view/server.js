@@ -50,8 +50,9 @@ Server.prototype.getContent = function (token, page) {
         page:page,
         }
     }).then(function (res) {
-      console.log(res)
-      return resolve(res.data);
+      let data= res.data;
+      let status = res.status
+      return resolve({data, status});
     })
         .catch(function (err) {
           return reject(err);

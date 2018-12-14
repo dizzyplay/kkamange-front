@@ -4,6 +4,8 @@ import './style.css'
 import view from './view/view.js';
 import Server from './view/server.js'
 
+const _ = require('lodash');
+
 let host = 'http://10.0.1.13:8000';
 let server = new Server(host);
 let token = null;
@@ -28,13 +30,15 @@ window.addEventListener('load', function () {
       //서버에 token 정보와 함께 get 요청
       server.getContent(valid_token)
           .then(res => {
-            view.content(res)
-            console.log(res)
-            Array.from(res).forEach(data=>{
-              server.getComment(valid_token, data.id)
-                  .then(res=>{
-                    view.comment(res, data.id)
-                  })
+            let postArray = res.data;
+            view.content(postArray)
+            Array.from(postArray).forEach(post => {
+              if (post.comment_count > 0) {
+                server.getComment(valid_token, post.id)
+                    .then(commentArray => {
+                      view.comment(commentArray)
+                    })
+              }
             })
           })
 
@@ -42,28 +46,42 @@ window.addEventListener('load', function () {
         .catch(err => {
           //token 인증 에러
           console.log(err.message)
-        })
+        });
+
 
     let page = 2;
-    window.onscroll = function(e){
-      let clientRectBottom = document.documentElement.getBoundingClientRect().bottom
-      let clientHeight = document.documentElement.clientHeight
-      if(clientHeight+100 > clientRectBottom){
-        server.getContent(token,page).then(res=>view.content(res))
-        console.log('bottom')
-        page +=1;
-        console.log(page)
-      }
-      // if((window.scrollY + window.innerHeight)>document.body.offsetHeight){
-      //   setTimeout(()=>console.log('showbottom'),1000)
-      // }
-    }
+    let preventGetContent = false;
 
+    window.addEventListener('scroll', _.throttle(function (e) {
+      let clientRectBottom = document.documentElement.getBoundingClientRect().bottom;
+      let clientHeight = document.documentElement.clientHeight;
+      if (clientHeight + 100 > clientRectBottom) {
+        if (!preventGetContent) {
+          console.log('over!!!')
+          server.getContent(token, page)
+              .then(res => {
+                if (res.status === 204) preventGetContent = true;
+                else if (res.status === 200) {
+                  view.content(res.data);
+                  Array.from(res.data).forEach(post => {
+                    if (post.comment_count > 0) {
+                      server.getComment(token, post.id)
+                          .then(commentArray => {
+                            view.comment(commentArray)
+                          })
+                    }
+                  });
+                  page += 1;
+                }
+              });
+          // console.log('bottom');
+          // console.log(page)
+        }
+      }
+    }, 500,{leading:true}))
   }
   server.submitLogin();
 })
-
-
 
 
 
