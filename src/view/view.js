@@ -34,7 +34,7 @@ const view = {
   },
   comment: function (postArray) {
     //data 는 Array
-    console.log('코멘트 그릴 포스트 아이디 값 '+postArray[0].post)
+    console.log('코멘트 그릴 포스트 아이디 값 ' + postArray[0].post)
     let container = document.getElementById(`${postArray[0].post}`);
     let commentBox = document.createElement('div');
     commentBox.classList.add('comment-box');

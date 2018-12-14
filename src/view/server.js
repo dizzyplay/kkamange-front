@@ -9,26 +9,26 @@ Server.prototype.login = function (login_info) {
     username: login_info.username,
     password: login_info.password
   })
-      .then((res) => {
-        window.sessionStorage.setItem('jwt-token', res.data.token);
-        location.reload();
-      })
-      .catch((err) => {
-        alert('계정 정보가 잘못 되었습니다.');
-        console.log(err)
-      })
+    .then((res) => {
+      window.sessionStorage.setItem('jwt-token', res.data.token);
+      location.reload();
+    })
+    .catch((err) => {
+      alert('계정 정보가 잘못 되었습니다.');
+      console.log(err)
+    })
 };
 
 Server.prototype.verifyToken = function (token) {
   return new Promise(function (resolve, reject) {
     axios.post(`${self.host}/api-token-verify/`, {token: token,})
-        .then(res => resolve(res.data))
-        .catch(err => {
-          window.sessionStorage.removeItem('jwt-token')
-          let loginForm = document.getElementById('login-form');
-          loginForm.classList.remove('hidden');
-          return reject(new Error(err + '토큰인증이 실패하였습니다'))
-        })
+      .then(res => resolve(res.data))
+      .catch(err => {
+        window.sessionStorage.removeItem('jwt-token')
+        let loginForm = document.getElementById('login-form');
+        loginForm.classList.remove('hidden');
+        return reject(new Error(err + '토큰인증이 실패하였습니다'))
+      })
   })
 };
 
@@ -46,17 +46,17 @@ Server.prototype.getContent = function (token, page) {
   return new Promise(function (resolve, reject) {
     axios.get(`${self.host}/blog/api/`, {
       headers: {'Authorization': "JWT " + token},
-      params:{
-        page:page,
-        }
+      params: {
+        page: page,
+      }
     }).then(function (res) {
-      let data= res.data;
+      let data = res.data;
       let status = res.status
       return resolve({data, status});
     })
-        .catch(function (err) {
-          return reject(err);
-        })
+      .catch(function (err) {
+        return reject(err);
+      })
   })
 };
 
@@ -67,9 +67,9 @@ Server.prototype.getComment = function (token, post_id) {
     }).then(res => {
       return resolve(res.data)
     })
-        .catch(err => {
-          return reject(new Error(err + '코멘트를 가져오는데 실패했습니다.'))
-        })
+      .catch(err => {
+        return reject(new Error(err + '코멘트를 가져오는데 실패했습니다.'))
+      })
   })
 };
 

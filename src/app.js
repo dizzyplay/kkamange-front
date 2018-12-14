@@ -29,24 +29,24 @@ window.addEventListener('load', function () {
       view.userInfo(login_user);
       //서버에 token 정보와 함께 get 요청
       server.getContent(valid_token)
-          .then(res => {
-            let postArray = res.data;
-            view.content(postArray)
-            Array.from(postArray).forEach(post => {
-              if (post.comment_count > 0) {
-                server.getComment(valid_token, post.id)
-                    .then(commentArray => {
-                      view.comment(commentArray)
-                    })
-              }
-            })
+        .then(res => {
+          let postArray = res.data;
+          view.content(postArray)
+          Array.from(postArray).forEach(post => {
+            if (post.comment_count > 0) {
+              server.getComment(valid_token, post.id)
+                .then(commentArray => {
+                  view.comment(commentArray)
+                })
+            }
           })
+        })
 
     })
-        .catch(err => {
-          //token 인증 에러
-          console.log(err.message)
-        });
+      .catch(err => {
+        //token 인증 에러
+        console.log(err.message)
+      });
 
 
     let page = 2;
@@ -57,28 +57,29 @@ window.addEventListener('load', function () {
       let clientHeight = document.documentElement.clientHeight;
       if (clientHeight + 100 > clientRectBottom) {
         if (!preventGetContent) {
-          console.log('over!!!')
           server.getContent(token, page)
-              .then(res => {
-                if (res.status === 204) preventGetContent = true;
-                else if (res.status === 200) {
-                  view.content(res.data);
-                  Array.from(res.data).forEach(post => {
-                    if (post.comment_count > 0) {
-                      server.getComment(token, post.id)
-                          .then(commentArray => {
-                            view.comment(commentArray)
-                          })
-                    }
-                  });
-                  page += 1;
-                }
-              });
+            .then(res => {
+              if (res.status === 204) {
+                console.log('end of request')
+                preventGetContent = true;
+              } else if (res.status === 200) {
+                view.content(res.data);
+                Array.from(res.data).forEach(post => {
+                  if (post.comment_count > 0) {
+                    server.getComment(token, post.id)
+                      .then(commentArray => {
+                        view.comment(commentArray)
+                      })
+                  }
+                });
+                page += 1;
+              }
+            });
           // console.log('bottom');
           // console.log(page)
         }
       }
-    }, 500,{leading:true}))
+    }, 500, {leading: true}))
   }
   server.submitLogin();
 })
