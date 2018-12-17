@@ -1,8 +1,9 @@
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-import './style.css'
 import view from './view/view.js';
 import Server from './view/server.js'
+
+import './styles.scss'
 
 const _ = require('lodash');
 
@@ -48,8 +49,10 @@ window.addEventListener('load', function () {
 
     // 글쓰기 버튼
     let postBtn = document.querySelector('.postBtn');
+    console.log(postBtn)
     let postFormVisible = false;
     postBtn.addEventListener('click', function () {
+      console.log('button')
       if (!postFormVisible) {
         postFormVisible = !postFormVisible;
         view.postForm()

@@ -5,60 +5,80 @@ const view = {
   },
   content: function (data) {
     // data 는 Array
+    // container 는 메인 컨테이너
     let container = document.querySelector('.container');
     Array.from(data).forEach(data => {
+      // main은 포스트 카드
       let main = document.createElement('div');
-      let title = document.createElement('div');
       let img_content = document.createElement('div');
       let content = document.createElement('div');
-      title.classList.add("divTop");
-      title.innerHTML = `<h1> ${data.title} </h1> `;
-      img_content.classList.add("divOutside");
+      let comment_form = document.createElement('div');
+      comment_form.classList.add('comment-form');
+      comment_form.innerHTML = `
+      <div class="comment-form-left"> <span class="normal-font">댓글을 입력해주세요</span></div>
+      <div class="comment-form-right">
+        <div class="comment-form-right-circle-btn"><i class="fa fa-coffee"></i></div>
+      </div>
+      `;
+      img_content.classList.add("post-photo-content");
       img_content.innerHTML = `<img src=${host}${data.photo} width="400"></div>`;
-      content.classList.add("divBottom");
-      content.innerHTML = `<b>집사 : ${data.nickname}</b> <br> ${data.content} <br> 
-            <span class="right"> - ${data.short_date} / 댓글개수 - ${data.comment_count}</span>`;
-      main.classList.add("container");
+      content.classList.add("post-text-content");
+      content.innerHTML = `
+<div><span class="date-font">${data.short_date} - comment ${data.comment_count}</span></div>
+<div class="post-content-divider">
+<div class="post-content-divider-content">${data.content} </div>
+<div class="post-content-divider-username">${data.nickname}</div>
+</div>
+`;
+      main.classList.add("post-container");
       main.id = data.id;
-      main.classList.add("container");
-      main.appendChild(title);
       main.appendChild(img_content);
       main.appendChild(content);
       container.appendChild(main);
+      main.appendChild(comment_form);
       main.dataset.aos = 'fade-up';
     })
   },
   userInfo: function (info) {
     let navbar = document.querySelector('.navbar')
-    navbar.innerText = `${info.nickname} 님 환영합니다`;
+    navbar.innerHTML = `${info.nickname} 님 환영합니다
+`;
   },
   comment: function (commentArray) {
     //data 는 Array
-    console.log('코멘트 그릴 포스트 아이디 값 ' + commentArray[0].post)
     let container = document.getElementById(`${commentArray[0].post}`);
     let commentBox = document.createElement('div');
     commentBox.classList.add('comment-box');
     container.appendChild(commentBox);
-    let ul = document.createElement('ul');
-    commentBox.appendChild(ul);
     Array.from(commentArray).forEach(comment => {
-      let li = document.createElement('li');
-      li.id = `comment-${comment.pk}`;
-      li.classList.add('comment-text');
-      li.innerHTML = `<b>${comment.nickname}</b><br> ${comment.content} - ${comment.short_date}`;
+      let commentDiv = document.createElement('div');
+      commentDiv.id = `comment-${comment.pk}`;
+      commentDiv.classList.add('comment-parent');
+      commentDiv.innerHTML = `
+      <div class="comment-parent-content">
+      ${comment.nickname} <span class="date-font">${comment.short_date}</span></br>
+      <span class="normal-font">${comment.content}</span>
+      </div>
+      <div class="comment-parent-reply">
+      댓글달기
+      </div>
+    `;
+      commentBox.appendChild(commentDiv)
 
       // 해당 코멘트에 코멘트가 달려있다면
       if(comment.children.length > 0) {
-        let child_ul = document.createElement('ul');
         Array.from(comment.children).forEach(c_comment =>{
-          let child_li = document.createElement('li');
-          child_li.innerText = `[${c_comment.nickname}] - ${c_comment.content} - ${c_comment.short_date}`;
-          child_ul.appendChild(child_li)
+          let childDiv = document.createElement('div');
+          childDiv.classList.add('comment-child-content');
+          childDiv.innerHTML = `
+      ${c_comment.nickname} <span class="date-font">${c_comment.short_date}</span></br>
+      <span class="normal-font">${c_comment.content}</span>
+    
+`;
+          commentBox.appendChild(childDiv)
         });
-        li.appendChild(child_ul)
       }
 
-      ul.appendChild(li);
     })
   },
   postForm: function(){
