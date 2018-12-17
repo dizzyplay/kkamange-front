@@ -32,19 +32,32 @@ const view = {
     let navbar = document.querySelector('.navbar')
     navbar.innerText = `${info.nickname} 님 환영합니다`;
   },
-  comment: function (postArray) {
+  comment: function (commentArray) {
     //data 는 Array
-    console.log('코멘트 그릴 포스트 아이디 값 ' + postArray[0].post)
-    let container = document.getElementById(`${postArray[0].post}`);
+    console.log('코멘트 그릴 포스트 아이디 값 ' + commentArray[0].post)
+    let container = document.getElementById(`${commentArray[0].post}`);
     let commentBox = document.createElement('div');
     commentBox.classList.add('comment-box');
     container.appendChild(commentBox);
     let ul = document.createElement('ul');
     commentBox.appendChild(ul);
-    Array.from(postArray).forEach(comment => {
+    Array.from(commentArray).forEach(comment => {
       let li = document.createElement('li');
+      li.id = `comment-${comment.pk}`;
       li.classList.add('comment-text');
       li.innerHTML = `<b>${comment.nickname}</b><br> ${comment.content} - ${comment.short_date}`;
+
+      // 해당 코멘트에 코멘트가 달려있다면
+      if(comment.children.length > 0) {
+        let child_ul = document.createElement('ul');
+        Array.from(comment.children).forEach(c_comment =>{
+          let child_li = document.createElement('li');
+          child_li.innerText = `[${c_comment.nickname}] - ${c_comment.content} - ${c_comment.short_date}`;
+          child_ul.appendChild(child_li)
+        });
+        li.appendChild(child_ul)
+      }
+
       ul.appendChild(li);
     })
   },

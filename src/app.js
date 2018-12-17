@@ -30,14 +30,12 @@ window.addEventListener('load', function () {
       //서버에 token 정보와 함께 get 요청
       server.getContent(valid_token)
         .then(res => {
+          console.log(res.data[0].comments)
           let postArray = res.data;
           view.content(postArray)
           Array.from(postArray).forEach(post => {
             if (post.comment_count > 0) {
-              server.getComment(valid_token, post.id)
-                .then(commentArray => {
-                  view.comment(commentArray)
-                })
+              view.comment(post.comments)
             }
           })
         })
@@ -51,8 +49,8 @@ window.addEventListener('load', function () {
     // 글쓰기 버튼
     let postBtn = document.querySelector('.postBtn');
     let postFormVisible = false;
-    postBtn.addEventListener('click',function(){
-      if(!postFormVisible){
+    postBtn.addEventListener('click', function () {
+      if (!postFormVisible) {
         postFormVisible = !postFormVisible;
         view.postForm()
       }
@@ -75,10 +73,7 @@ window.addEventListener('load', function () {
                 view.content(res.data);
                 Array.from(res.data).forEach(post => {
                   if (post.comment_count > 0) {
-                    server.getComment(token, post.id)
-                      .then(commentArray => {
-                        view.comment(commentArray)
-                      })
+                    view.comment(post.comments)
                   }
                 });
                 page += 1;
