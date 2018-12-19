@@ -1,10 +1,13 @@
 @import '~font-awesome/css/font-awesome.css';
-@import url("https://fonts.googleapis.com/css?family=Nanum+Gothic:500");
+@import url("https://fonts.googleapis.com/css?family=Nanum+Gothic");
 
 $post-content-box-width: 380px;
 $post-content-box-padding: 10px;
 $medium-color: #626262;
-
+html{
+  font-size: 12px;
+  line-height: 1.54;
+}
 body{
   font-family: 'Nanum Gothic', sans-serif;
 }
@@ -16,16 +19,11 @@ body{
 }
 
 .date-font{
-  font-size: 11px;
+  font-size: 0.7rem;
   color: #{$medium-color};
   font-weight: 300;
 }
 
-.normal-font{
-  font-size:13px;
-  font-weight: 500;
-  line-height: 1.54;
-}
 
 .postBtn {
   /* change bg color to get different hues    */
@@ -59,6 +57,7 @@ body{
     flex-direction: column;
     align-items: center;
     margin-top: 30px;
+    margin-bottom: 90px;
   }
   &-photo-content{
     margin-top: 20px;
@@ -72,11 +71,11 @@ body{
   &-content-divider{
     @extend .flex-space-between-center;
     &-content{
-      font-size: 22px;
+      font-size: 1.5rem;
       font-weight: 500;
     }
     &-username{
-      font-size: 19px;
+      font-size: 1.5rem;
       font-weight: 800;
     }
   }
@@ -84,7 +83,7 @@ body{
 
 
 .comment {
-  &-box{
+  &-container{
     border-top: 2px solid #c9c9c9;
     width: #{$post-content-box-width+20};
     background-color: #fafafa;
@@ -122,38 +121,35 @@ body{
       }
     }
   }
-  &-parent{
+  &-box{
     @extend .flex-space-between-center;
     border-bottom: 2px solid #ececec;
-    padding: 10px;
-    margin: 5px;
+    padding-top: 10px;
+    padding-left: 15px;
+    padding-bottom: 10px;
+    margin: 0;
+  }
+  &-parent{
     &-content{
       width: 320px;
-      font-weight: 800;
     }
-    &-reply{
-      font-size:11px;
-      font-weight: 500;
+    &-reply-button{
+      width: 50px;
+      font-size:0.8rem;
       color: #b2b2b2;
     }
   }
   &-child{
-    &-empty{
-      width: 20px;
-    }
     &-content{
-      font-weight: 800;
+      width: 100%;
       padding-left:30px;
-      padding-top:10px;
-      padding-bottom:10px;
-      border-bottom: 2px solid #ececec;
+      padding-top:0;
+      padding-bottom:0;
     }
   }
 }
 
-.comment-text {
-  font-size: 12px;
-}
+
 
 .navbar {
   position: fixed;

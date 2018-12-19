@@ -48,18 +48,18 @@ const view = {
     //data 는 Array
     let container = document.getElementById(`${commentArray[0].post}`);
     let commentBox = document.createElement('div');
-    commentBox.classList.add('comment-box');
+    commentBox.classList.add('comment-container');
     container.appendChild(commentBox);
     Array.from(commentArray).forEach(comment => {
       let commentDiv = document.createElement('div');
       commentDiv.id = `comment-${comment.pk}`;
-      commentDiv.classList.add('comment-parent');
+      commentDiv.classList.add('comment-box');
       commentDiv.innerHTML = `
       <div class="comment-parent-content">
-      ${comment.nickname} <span class="date-font">${comment.short_date}</span></br>
-      <span class="normal-font">${comment.content}</span>
+      <b>${comment.nickname}</b> <span class="date-font">${comment.short_date}</span></br>
+      ${comment.content}
       </div>
-      <div class="comment-parent-reply">
+      <div class="comment-parent-reply-button">
       댓글달기
       </div>
     `;
@@ -69,10 +69,14 @@ const view = {
       if(comment.children.length > 0) {
         Array.from(comment.children).forEach(c_comment =>{
           let childDiv = document.createElement('div');
-          childDiv.classList.add('comment-child-content');
+          childDiv.id = `comment-${c_comment.pk}`;
+          childDiv.dataset.parent_id = `${c_comment.parent}`
+          childDiv.classList.add('comment-box');
           childDiv.innerHTML = `
-      ${c_comment.nickname} <span class="date-font">${c_comment.short_date}</span></br>
-      <span class="normal-font">${c_comment.content}</span>
+      <div class="comment-child-content">
+      <b>${c_comment.nickname}</b> <span class="date-font">${c_comment.short_date}</span></br>
+      ${c_comment.content}
+      </div>
     
 `;
           commentBox.appendChild(childDiv)
