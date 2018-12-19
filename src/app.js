@@ -37,6 +37,12 @@ window.addEventListener('load', function () {
           Array.from(postArray).forEach(post => {
             if (post.comment_count > 0) {
               view.comment(post.comments)
+              let targetDiv = document.getElementById(post.id)
+              view.commentForm(targetDiv)
+            }
+            else{
+              let targetDiv = document.getElementById(post.id)
+              view.commentForm(targetDiv)
             }
           })
         })
@@ -77,6 +83,12 @@ window.addEventListener('load', function () {
                 Array.from(res.data).forEach(post => {
                   if (post.comment_count > 0) {
                     view.comment(post.comments)
+                    let targetDiv = document.getElementById(post.id)
+                    view.commentForm(targetDiv)
+                  }
+                  else{
+                    let targetDiv = document.getElementById(post.id)
+                    view.commentForm(targetDiv)
                   }
                 });
                 page += 1;

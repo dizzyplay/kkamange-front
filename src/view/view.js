@@ -12,19 +12,12 @@ const view = {
       let main = document.createElement('div');
       let img_content = document.createElement('div');
       let content = document.createElement('div');
-      let comment_form = document.createElement('div');
-      comment_form.classList.add('comment-form');
-      comment_form.innerHTML = `
-      <div class="comment-form-left"> <span class="normal-font">댓글을 입력해주세요</span></div>
-      <div class="comment-form-right">
-        <div class="comment-form-right-circle-btn"><i class="fa fa-coffee"></i></div>
-      </div>
-      `;
+
       img_content.classList.add("post-photo-content");
-      img_content.innerHTML = `<img src=${host}${data.photo} width="400"></div>`;
+      img_content.innerHTML = `<img src=${host}${data.photo} width="100%"></div>`;
       content.classList.add("post-text-content");
       content.innerHTML = `
-<div><span class="date-font">${data.short_date} - comment ${data.comment_count}</span></div>
+<div class="post-date"><span class="date-font">${data.short_date} - comment ${data.comment_count}</span></div>
 <div class="post-content-divider">
 <div class="post-content-divider-content">${data.content} </div>
 <div class="post-content-divider-username">${data.nickname}</div>
@@ -35,13 +28,13 @@ const view = {
       main.appendChild(img_content);
       main.appendChild(content);
       container.appendChild(main);
-      main.appendChild(comment_form);
       main.dataset.aos = 'fade-up';
     })
   },
   userInfo: function (info) {
-    let navbar = document.querySelector('.navbar')
-    navbar.innerHTML = `${info.nickname} 님 환영합니다
+    let navbar = document.querySelector('.navbar');
+
+    navbar.innerHTML = `<div class="navbar-content">${info.nickname} 님 환영합니다</div>
 `;
   },
   comment: function (commentArray) {
@@ -67,23 +60,32 @@ const view = {
 
       // 해당 코멘트에 코멘트가 달려있다면
       if(comment.children.length > 0) {
-        Array.from(comment.children).forEach(c_comment =>{
+        Array.from(comment.children).forEach(c_comment => {
           let childDiv = document.createElement('div');
           childDiv.id = `comment-${c_comment.pk}`;
-          childDiv.dataset.parent_id = `${c_comment.parent}`
+          childDiv.dataset.parent_id = `${c_comment.parent}`;
           childDiv.classList.add('comment-box');
           childDiv.innerHTML = `
       <div class="comment-child-content">
       <b>${c_comment.nickname}</b> <span class="date-font">${c_comment.short_date}</span></br>
       ${c_comment.content}
       </div>
-    
-`;
+      `;
           commentBox.appendChild(childDiv)
         });
       }
-
-    })
+    });
+  },
+  commentForm:function(targetDiv){
+    let comment_form = document.createElement('div');
+    comment_form.classList.add('comment-form');
+    comment_form.innerHTML = `
+      <div class="comment-form-left"><textarea placeholder="댓글을 입력해주세요" class="comment-form-left"></textarea></div>
+      <div class="comment-form-right">
+        <div class="comment-form-right-circle-btn"><i class="fa fa-coffee"></i></div>
+      </div>
+      `;
+    targetDiv.appendChild(comment_form);
   },
   postForm: function(){
     let menuDiv = document.querySelector('.menuContainer');
