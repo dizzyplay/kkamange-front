@@ -1,7 +1,8 @@
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-import view from './view/view.js';
-import Server from './view/server.js'
+import view from './components/view.js';
+import Server from './components/server.js';
+import Token from './components/token.js';
 
 import './styles.scss'
 
@@ -10,18 +11,7 @@ const _ = require('lodash');
 let host = 'http://10.0.1.13:8000';
 let server = new Server(host);
 let token = null;
-token = window.sessionStorage.getItem('jwt-token');
-
-if(!token){
-  let ca = document.cookie.split(';')
-  Array.from(ca).forEach(cookie =>{
-    let token_exist = /jwt-token/g.test(cookie);
-    if(token_exist){
-      let tokenArray = cookie.split('=');
-      token = tokenArray[1];
-    }
-  })
-}
+token = Token.getFromBrowser();
 
 AOS.init();
 

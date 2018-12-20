@@ -25,7 +25,8 @@ Server.prototype.verifyToken = function (token) {
     axios.post(`${self.host}/api-token-verify/`, {token: token,})
       .then(res => resolve(res.data))
       .catch(err => {
-        window.sessionStorage.removeItem('jwt-token')
+        window.sessionStorage.removeItem('jwt-token');
+        document.cookie = 'jwt-token=; Max-Age=-99999999;';
         let loginForm = document.getElementById('login-form');
         loginForm.classList.remove('hidden');
         return reject(new Error(err + ' 토큰인증이 실패하였습니다'))
