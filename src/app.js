@@ -12,6 +12,17 @@ let server = new Server(host);
 let token = null;
 token = window.sessionStorage.getItem('jwt-token');
 
+if(!token){
+  let ca = document.cookie.split(';')
+  Array.from(ca).forEach(cookie =>{
+    let token_exist = /jwt-token/g.test(cookie);
+    if(token_exist){
+      let tokenArray = cookie.split('=');
+      token = tokenArray[1];
+    }
+  })
+}
+
 AOS.init();
 
 document.addEventListener('readystatechange', function () {
@@ -31,7 +42,6 @@ window.addEventListener('load', function () {
       //서버에 token 정보와 함께 get 요청
       server.getContent(valid_token)
         .then(res => {
-          console.log(res.data[0].comments)
           let postArray = res.data;
           view.content(postArray)
           Array.from(postArray).forEach(post => {
@@ -55,7 +65,6 @@ window.addEventListener('load', function () {
 
     // 글쓰기 버튼
     let postBtn = document.querySelector('.postBtn');
-    console.log(postBtn)
     let postFormVisible = false;
     postBtn.addEventListener('click', function () {
       console.log('button')

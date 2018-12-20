@@ -11,6 +11,7 @@ Server.prototype.login = function (login_info) {
   })
     .then((res) => {
       window.sessionStorage.setItem('jwt-token', res.data.token);
+      document.cookie = `jwt-token=${res.data.token}`;
       location.reload();
     })
     .catch((err) => {
@@ -27,7 +28,7 @@ Server.prototype.verifyToken = function (token) {
         window.sessionStorage.removeItem('jwt-token')
         let loginForm = document.getElementById('login-form');
         loginForm.classList.remove('hidden');
-        return reject(new Error(err + '토큰인증이 실패하였습니다'))
+        return reject(new Error(err + ' 토큰인증이 실패하였습니다'))
       })
   })
 };
