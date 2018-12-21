@@ -9,9 +9,9 @@ import './styles.scss'
 const _ = require('lodash');
 
 let host = 'http://10.0.1.13:8000';
-let server = new Server(host);
 let token = null;
 token = Token.getFromBrowser();
+let server = new Server({host, token});
 
 AOS.init();
 
@@ -25,28 +25,11 @@ window.addEventListener('load', function () {
   if (token) {
     server.verifyToken(token).then(data => {
       //token 인증 성공
-      let valid_token = data.token;
       let login_user = data.profile;
       //유저 정보 표시
       view.userInfo(login_user);
       //서버에 token 정보와 함께 get 요청
-      server.getContent(valid_token)
-        .then(res => {
-          let postArray = res.data;
-          view.content(postArray)
-          Array.from(postArray).forEach(post => {
-            if (post.comment_count > 0) {
-              view.comment(post.comments)
-              let targetDiv = document.getElementById(post.id)
-              view.commentForm(targetDiv)
-            }
-            else{
-              let targetDiv = document.getElementById(post.id)
-              view.commentForm(targetDiv)
-            }
-          })
-        })
-
+      procContent()
     })
       .catch(err => {
         //token 인증 에러
@@ -72,27 +55,9 @@ window.addEventListener('load', function () {
       let clientHeight = document.documentElement.clientHeight;
       if (clientHeight + 100 > clientRectBottom) {
         if (!preventGetContent) {
-          server.getContent(token, page)
-            .then(res => {
-              if (res.status === 204) {
-                console.log('end of request')
-                preventGetContent = true;
-              } else if (res.status === 200) {
-                view.content(res.data);
-                Array.from(res.data).forEach(post => {
-                  if (post.comment_count > 0) {
-                    view.comment(post.comments)
-                    let targetDiv = document.getElementById(post.id)
-                    view.commentForm(targetDiv)
-                  }
-                  else{
-                    let targetDiv = document.getElementById(post.id)
-                    view.commentForm(targetDiv)
-                  }
-                });
-                page += 1;
-              }
-            });
+          procContent(page).then(res => page = res + 1).catch(err => {
+            preventGetContent = true
+          })
         }
       }
     }, 500, {leading: true}))
@@ -100,6 +65,56 @@ window.addEventListener('load', function () {
   //토큰 인증 실패시
   server.submitLogin();
 })
+
+function procContent(page) {
+  return new Promise((resolve, reject) => {
+    server.getContent(page)
+      .then(res => {
+        if (res.status === 204) {
+          console.log('end of page')
+          return reject(false)
+        } else if (res.status === 200) {
+          view.content(res.data);
+          Array.from(res.data).forEach(post => {
+            let data = {
+              commentArray: post.comments,
+              post_id: post.id
+            }
+            view.comment(data)
+
+            let cBtn = document.getElementById(`comment-btn-${post.id}`)
+            cBtn.addEventListener('click', () => {
+              let commentText = document.getElementById(`comment-text-id-${post.id}`);
+              console.log(commentText.value);
+              let data = {
+                comment: commentText.value,
+                post_id: post.id
+              }
+              //서버로 코멘트 정보를 보내고
+              server.sendCommentData(data)
+              // 응답을 받아서
+                .then(res => {
+                  // 해당 코멘트 부분 전체를 다시 그린다
+                  let commentDiv = document.getElementById(`${post.id}`)
+                  let child = document.getElementById(`comment-box-${post.id}`)
+                  commentDiv.removeChild(child)
+                  console.log(res)
+                  let data ={
+                    commentArray: res.data,
+                    post_id: post.id
+                  }
+                  console.log(data.commentArray)
+                  view.comment(data)
+                })
+              commentText.value = '';
+            })
+
+          });
+          return resolve(page)
+        }
+      })
+  })
+}
 
 
 

@@ -1,11 +1,18 @@
 import axios from 'axios';
+import view from './view';
 
-const Server = function (host) {
-  self.host = host;
+const Server = function (data) {
+  self.host= data.host;
+  self.axios = axios.create({
+    baseURL: data.host,
+    headers: {
+      'Authorization': "JWT "+data.token,
+    },
+  })
 };
 
 Server.prototype.login = function (login_info) {
-  axios.post(`${self.host}/api-token-auth/`, {
+  self.axios.post('/api-token-auth/', {
     username: login_info.username,
     password: login_info.password
   })
@@ -20,9 +27,22 @@ Server.prototype.login = function (login_info) {
     })
 };
 
+Server.prototype.sendCommentData = function(commentData){
+  return new Promise((resolve,reject)=>{
+    self.axios.post(`/comment/api/`,{
+      data:{
+        content: commentData.comment,
+        post: commentData.post_id,
+      },
+    }).then(res=>{
+      return resolve(res)
+    })
+  })
+};
+
 Server.prototype.verifyToken = function (token) {
   return new Promise(function (resolve, reject) {
-    axios.post(`${self.host}/api-token-verify/`, {token: token,})
+    self.axios.post(`/api-token-verify/`, {token: token,})
       .then(res => resolve(res.data))
       .catch(err => {
         window.sessionStorage.removeItem('jwt-token');
@@ -44,10 +64,9 @@ Server.prototype.submitLogin = function () {
   })
 };
 
-Server.prototype.getContent = function (token, page) {
+Server.prototype.getContent = function (page) {
   return new Promise(function (resolve, reject) {
-    axios.get(`${self.host}/blog/api/`, {
-      headers: {'Authorization': "JWT " + token},
+    self.axios.get(`/blog/api/`, {
       params: {
         page: page,
       }
@@ -62,17 +81,5 @@ Server.prototype.getContent = function (token, page) {
   })
 };
 
-Server.prototype.getComment = function (token, post_id) {
-  return new Promise(function (resolve, reject) {
-    axios.get(`${self.host}/comment/${post_id}`, {
-      headers: {'Authorization': "JWT " + token}
-    }).then(res => {
-      return resolve(res.data)
-    })
-      .catch(err => {
-        return reject(new Error(err + '코멘트를 가져오는데 실패했습니다.'))
-      })
-  })
-};
 
 export default Server
