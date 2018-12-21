@@ -140,13 +140,17 @@ body{
       }
     }
   }
-  &-box{
+  &-between-box{
     @extend .flex-space-between-center;
     border-bottom: 1px solid #ececec;
     padding: 10px 15px 10px 15px;
     margin: 0;
   }
-
+  &-column-box{
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
   &-parent{
     &-content{
       width: 100%;
@@ -155,12 +159,16 @@ body{
       width: 50px;
       font-size:0.8rem;
       color: #b2b2b2;
+      cursor: pointer;
+      &:hover{
+        color:black;
+      }
     }
   }
   &-child{
     &-content{
-      padding-left: 30px;
-      width: 100%;
+      padding: 10px 0px 10px 40px;
+      border-bottom: 1px solid #ececec;
     }
   }
 }

@@ -51,15 +51,17 @@ const view = {
       Array.from(commentArray).forEach(comment => {
         let commentDiv = document.createElement('div');
         commentDiv.id = `comment-${comment.pk}`;
-        commentDiv.classList.add('comment-box');
+        commentDiv.classList.add('comment-column-box');
         commentDiv.innerHTML = `
+          <div class="comment-between-box">
           <div class="comment-parent-content">
           <b>${comment.nickname}</b> <span class="date-font">${comment.short_date}</span></br>
           ${comment.content}
           </div>
-          <div class="comment-parent-reply-button">
+          <div class="comment-parent-reply-button" id="reply-btn-for-comment-${comment.pk}">
           댓글달기
           </div>
+          </divc>
         `;
         commentBox.appendChild(commentDiv);
         // 해당 코멘트에 코멘트가 달려있다면
@@ -75,11 +77,29 @@ const view = {
               ${c_comment.content}
               </div>
               `;
-            commentBox.appendChild(childDiv)
+            commentDiv.appendChild(childDiv)
           });
         }
+        let rBtn = document.getElementById(`reply-btn-for-comment-${comment.pk}`);
+        rBtn.addEventListener('click',()=>{
+          console.log(`clicked ${comment.pk}`)
+          let parentDiv = document.getElementById(`comment-${comment.pk}`)
+          let toMakeForm = document.createElement('div')
+          toMakeForm.classList.add('comment-form')
+          toMakeForm.innerHTML = `
+              <div class="comment-form-left">
+              <textarea placeholder="댓글을 입력해주세요" class="comment-form-left" id="comment-text-id-${comment.pk}"></textarea>
+            </div>
+            <div class="comment-form-right">
+              <div class="comment-form-right-circle-btn" id="comment-btn-${comment.pk}"><i class="fa fa-coffee"></i></div>
+              </form>
+      </div>
+          `;
+          parentDiv.appendChild(toMakeForm)
+        })
       });
     }
+
     view.commentForm(post_id)
   },
 
@@ -97,7 +117,15 @@ const view = {
       </div>
       `;
     targetDiv.appendChild(comment_form);
+    let cBtn = document.getElementById(`comment-btn-${post_id}`)
+    cBtn.addEventListener('click',()=>{
+      console.log('this is inside from comentform')
+      let commentText = document.getElementById(`comment-text-id-${post_id}`);
+      console.log(commentText.value)
+      commentText.value ='';
+    })
   },
+
   postForm: function () {
     let menuDiv = document.querySelector('.menuContainer');
 
