@@ -81,34 +81,6 @@ function procContent(page) {
               post_id: post.id
             }
             view.comment(data)
-
-            // let cBtn = document.getElementById(`comment-btn-${post.id}`)
-            // cBtn.addEventListener('click', () => {
-            //   let commentText = document.getElementById(`comment-text-id-${post.id}`);
-            //   console.log(commentText.value);
-            //   let data = {
-            //     comment: commentText.value,
-            //     post_id: post.id
-            //   }
-            //   //서버로 코멘트 정보를 보내고
-            //   server.sendCommentData(data)
-            //   // 응답을 받아서
-            //     .then(res => {
-            //       // 해당 코멘트 부분 전체를 다시 그린다
-            //       let commentDiv = document.getElementById(`${post.id}`)
-            //       let child = document.getElementById(`comment-box-${post.id}`)
-            //       commentDiv.removeChild(child)
-            //       console.log(res)
-            //       let data ={
-            //         commentArray: res.data,
-            //         post_id: post.id
-            //       }
-            //       console.log(data.commentArray)
-            //       view.comment(data)
-            //     })
-            //   commentText.value = '';
-            // })
-
           });
           return resolve(page)
         }
